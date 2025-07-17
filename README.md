@@ -12,8 +12,8 @@
 ---
 
 ## 🔗 Deployed Links
-- **Frontend:** [https://taxigo.vercel.app](#)
-- **Backend API:** [https://taxigo-backend.onrender.com](#)
+- **Frontend:** [https://taxi-click.vercel.app](#)
+- **Backend API:** [https://taxclick-backend.onrender.com](#)
 
 ---
 

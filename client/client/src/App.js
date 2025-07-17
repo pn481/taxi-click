@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import MapView from './components/MapView';
 
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
 
-function App() {
+export default function App() {
   const [location, setLocation] = useState('');
   const [destination, setDestination] = useState('');
   const [requests, setRequests] = useState([]);
@@ -73,18 +72,4 @@ function App() {
 }
 
 
-const mapContainerStyle = { width: '100%', height: '300px' };
-const center = { lat: -26.2041, lng: 28.0473 }; // Example: Johannesburg
 
-<LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_KEY}>
-  <GoogleMap
-    mapContainerStyle={mapContainerStyle}
-    center={center}
-    zoom={12}
-  >
-    <Marker position={center} />
-  </GoogleMap>
-</LoadScript>
-
-
-export default App;

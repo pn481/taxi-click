@@ -1,18 +1,24 @@
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 function MapView({ driverLocation }) {
-  const center = driverLocation || { lat: -26.2041, lng: 28.0473 }; // Default: Johannesburg
-  return (
-    <LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_KEY}>
-      <GoogleMap
-        mapContainerStyle={{ width: '100%', height: '300px' }}
-        center={center}
-        zoom={14}
-      >
-        <Marker position={center} />
-      </GoogleMap>
-    </LoadScript>
-  );
+  const position = driverLocation
+  ? [driverLocation.lat,
+    driverLocation.lng]
+    : [-26.2041, 28.0473]; // Johannesburg Default
+
+    return (
+      <MapContainer center={position}
+      zoom={13} style={{ height: "300px",
+        width: "100%" }}>
+          <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={position}>
+            <Popup>Driver is here.</Popup>
+          </Marker>
+        </MapContainer>
+    );
 }
 
 export default MapView;
