@@ -1,5 +1,5 @@
 # taxi-click
-# 🚖 TaxiGo Load+ – Capstone Project
+# 🚖 Taxi@ a click – Capstone Project
 
 **Developer:** Promise Ntandane  
 **Contact:** pntandane72@gmail.com | 0761354770  
@@ -7,7 +7,7 @@
 ---
 
 ## 📌 Project Overview
-**TaxiGo Load+** is a real-time ride coordination app designed for taxi drivers and passengers in South Africa's informal transport sector. It enables passengers to request pickups, notifies drivers instantly, and provides real-time tracking via Google Maps.
+**Taxi@ a click** is a real-time ride coordination app designed for taxi drivers and passengers in South Africa's informal transport sector. It enables passengers to request pickups, notifies drivers instantly, and provides real-time tracking via Google Maps.
 
 ---
 
