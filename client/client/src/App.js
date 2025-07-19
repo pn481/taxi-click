@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import MapView from './components/MapView';
-
+import 'leaflet/dist/leaflet.css';
 
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
 

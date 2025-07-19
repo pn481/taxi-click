@@ -4,6 +4,7 @@ import './index.css';
 import { io } from 'socket.io-client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'leaflet/dist/leaflet.css';
 
 
 io.on('connection', (socket) => {
