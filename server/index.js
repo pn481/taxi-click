@@ -11,6 +11,11 @@ const io = new Server(server, {
   cors: { origin: '*' }
 });
 
+
+app.use(cors({
+  origin: 'https://taxi-click-8pm5y3lik-pn481s-projects.vercel.app'
+}));
+
 app.use(cors());
 app.use(express.json());
 
