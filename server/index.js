@@ -52,6 +52,11 @@ app.get('/', (req, res) => {
 app.get('/api/results', (reg, res) => {
   res.json({ message: 'Results fetched succesfully!' });
 });
+
+app.get('/api/v1/projects', (req, res) => {
+  res.json({ projects:[] }); // replace with actual data logic
+});
+
 app.patch('/api/request/:id', async (req, res) => {
   const ride = await RideRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(ride);

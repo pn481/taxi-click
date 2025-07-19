@@ -19,6 +19,8 @@ io.on('connection', (socket) => {
 fetch(`$
   {process.env.React_APP_BACKEND_URL}/api/results`)
 const root = ReactDOM.createRoot(document.getElementById('root'));
+fetch(`$
+  {process.env.REACT_APP_BACKEND_URL}/api/v1/prpjects`);
 root.render(
   <React.StrictMode>
     <App />
