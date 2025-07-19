@@ -3,6 +3,7 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 import MapView from './components/MapView';
 
+
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
 
 export default function App() {
