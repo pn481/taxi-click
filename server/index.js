@@ -49,6 +49,9 @@ app.get('/', (req, res) => {
   res.send('Taxi@ a click backend is running!');
 });
 
+app.get('/api/results', (reg, res) => {
+  res.json({ message: 'Results fetched succesfully!' });
+});
 app.patch('/api/request/:id', async (req, res) => {
   const ride = await RideRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(ride);
