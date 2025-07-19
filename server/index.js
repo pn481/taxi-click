@@ -45,6 +45,10 @@ app.get('/api/requests', async (req, res) => {
   res.json(rides);
 });
 
+app.get('/', (req, res) => {
+  res.send('Taxi@ a click backend is running!');
+});
+
 app.patch('/api/request/:id', async (req, res) => {
   const ride = await RideRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(ride);
