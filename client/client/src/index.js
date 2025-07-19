@@ -16,7 +16,13 @@ io.on('connection', (socket) => {
   });
 });
 const socket =
-io('https://taxi-click.onrender.com/')
+io('https://taxi-click.onrender.com/',
+   {
+    transports: ["websocket"],
+    secure: true,
+    reconnection: true,
+    rejectUnauthorized: false
+   });
 
 
 fetch(`$
