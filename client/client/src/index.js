@@ -15,6 +15,9 @@ io.on('connection', (socket) => {
     io.emit('driver-location-update', data);
   });
 });
+const socket =
+io('https://taxi-click.onrender.com/')
+
 
 fetch(`$
   {process.env.React_APP_BACKEND_URL}/api/results`)

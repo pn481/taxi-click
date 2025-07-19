@@ -3,14 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-require('dotenv').config();
 
+require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: '*' }
-});
-
 
 app.use(cors({
   origin: 'https://taxi-click-8pm5y3lik-pn481s-projects.vercel.app'
@@ -65,7 +61,12 @@ app.patch('/api/request/:id', async (req, res) => {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 });
-
+const io = require('socket.io')(server,
+  {cors: {
+    origin: "*",
+    methods: ["GET", "POST"]}
+}
+);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
