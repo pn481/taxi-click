@@ -11,13 +11,20 @@ export default function App() {
   const [destination, setDestination] = useState('');
   const [requests, setRequests] = useState([]);
   const [driverLocation, setDriverLocation] = useState(null);
+  const [requestStatus, setRequestStatus] = useState('Request Pickup');
 
   useEffect(() => {
     fetchRequests();
-
+    socket.on('driver-location-update', (driverLocation) => {
+      console.log('Driver is moving:', driverLocation);
+      // Update marker on Leaflet map
+    });
     socket.on('new-request', (data) => setRequests(prev => [...prev, data]));
     socket.on('driver-location-update', loc => setDriverLocation(loc));
-
+    socket.on('pickup-requested', ({ passengerLocation, destination }) => {
+       console.log('New pickup request:', passengerLocation, destination);
+      })
+    
     // Driver sends location every 5s
     const geoInterval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(pos => {
@@ -49,6 +56,18 @@ export default function App() {
     await axios.patch(`https://taxi-click.onrender.com/api/request/${id}`, { status: 'accepted' });
     fetchRequests();
   };
+  const requestPickup = () => {
+    const passengerLocation = { lat: -26.2, lng: 28.04 };
+    socket.emit('pickup-request', { passengerLocation, destination });
+    setRequestStatus('Requested');
+  };
+  navigator.geolocation.watchPosition((Position) => {
+    const driverLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+    socket.emit('driver-location', driverLocation);
+  })
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Taxi@ a click</h1>
@@ -68,6 +87,8 @@ export default function App() {
               <p><strong>From:</strong> {req.location}</p>
               <p><strong>To:</strong> {req.destination}</p>
               <button className="mt-1 bg-green-500 text-white px-3 py-1 rounded" onClick={() => acceptRequest(req._id)}>Accept</button>
+              <button onClick={() => setRequestStatus('navigating')}>{requestStatus == 'Requested' ? 'Start Navigation' : 'Navigating'}</button>
+              <button onClick={requestPickup}>{requestStatus}</button>
             </div>
           ))}
         </div>

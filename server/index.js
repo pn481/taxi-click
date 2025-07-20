@@ -67,10 +67,19 @@ const io = require('socket.io')(server,
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 });
-socket.on('driver-location', (data) => {
-    // Broadcast to all passengers
-    io.emit('driver-location-update', data);
+// Passenger requests pickup
+socket.on('pickup-request',
+  ({ passengerLocation, destination }) => {
+    console.log('Pickup Request:', passengerLocation, destination);
+    
+    // Notify driver(s)
+    io.emit('pickup-requested',
+      { passengerLocation, destination }); 
   });
-
+// Driver sends live location
+  socket.on('driver-location', (driverLocation) => {
+    // Broadcast to all passengers
+    io.emit('driver-location-update', driverLocation);
+  });
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
