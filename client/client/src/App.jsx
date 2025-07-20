@@ -9,8 +9,8 @@ const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://taxi-click.onren
 export default function App() {
   const [location, setLocation] = useState('');
   const [destination, setDestination] = useState('');
-  const [requests, setRequests] = useState([]);
-  const [driverLocation, setDriverLocation] = useState(null);
+  const [requests, setRequests] = useState('');
+  const [driverLocation, setDriverLocation] = useState('');
   const [requestStatus, setRequestStatus] = useState('Request Pickup');
 
   useEffect(() => {
