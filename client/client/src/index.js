@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { use } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { io } from 'socket.io-client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'leaflet/dist/leaflet.css';
+import { useEffect, useRef } from 'react';
 
-
+export const useSocket = () => {
+  const socketRef = useRef();
+  
+  useEffect(() => {
+    socketRef.current =
+    io(process.env.REACT_APP_BACKEND_URL);
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
+  return socketRef.current;
+};
 io.on('connection', (socket) => {
   console.log('Connected:', socket.id);
 
