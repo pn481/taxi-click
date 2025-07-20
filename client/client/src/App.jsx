@@ -45,10 +45,13 @@ export default function App() {
     setLocation('');
     setDestination('');
   };
-
+  const acceptRequest = async (id) => {
+    await axios.patch(`https://taxi-click.onrender.com/api/request/${id}`, { status: 'accepted' });
+    fetchRequests();
+  };
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">TaxiGo Load+</h1>
+      <h1 className="text-2xl font-bold">Taxi@ a click</h1>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <h2 className="font-semibold mb-2">Passenger Request</h2>
@@ -64,6 +67,7 @@ export default function App() {
             <div key={req._id} className="border-b py-2">
               <p><strong>From:</strong> {req.location}</p>
               <p><strong>To:</strong> {req.destination}</p>
+              <button className="mt-1 bg-green-500 text-white px-3 py-1 rounded" onClick={() => acceptRequest(req._id)}>Accept</button>
             </div>
           ))}
         </div>

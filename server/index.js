@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-
 require('dotenv').config();
+
 const app = express();
 const server = http.createServer(app);
 
