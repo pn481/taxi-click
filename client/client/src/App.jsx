@@ -3,6 +3,7 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 import MapView from './components/MapView';
 import 'leaflet/dist/leaflet.css';
+import { request } from 'express';
 
 const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://taxi-click.onrender.com');
 
@@ -76,7 +77,7 @@ export default function App() {
           <h2 className="font-semibold mb-2">Passenger Request</h2>
           <input className="border p-2 w-full mb-2" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} />
           <input className="border p-2 w-full mb-2" placeholder="Destination" value={destination} onChange={e => setDestination(e.target.value)} />
-          <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={submitRequest}>Request Pickup</button>
+          <button onClick={requestPickup} className="bg-blue-600 hover: bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md transition">{requestStatus}</button>
           <MapView driverLocation={driverLocation} />
         </div>
 
