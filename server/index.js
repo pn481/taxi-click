@@ -8,11 +8,10 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
+// CORS setup
 app.use(cors({
   origin: 'https://taxi-click-43fa9.web.app'
 }));
-
-app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
@@ -21,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 });
 
-// Models
+// Mongoose Model
 const RideRequest = mongoose.model('RideRequest', new mongoose.Schema({
   passengerName: String,
   location: String,
@@ -29,10 +28,10 @@ const RideRequest = mongoose.model('RideRequest', new mongoose.Schema({
   status: { type: String, default: 'waiting' }
 }));
 
-// Routes
+// REST API Endpoints
 app.post('/api/request', async (req, res) => {
   const ride = await RideRequest.create(req.body);
-  io.emit('new-request', ride); // Emit to all drivers
+  io.emit('new-request', ride);
   res.json(ride);
 });
 
@@ -41,48 +40,50 @@ app.get('/api/requests', async (req, res) => {
   res.json(rides);
 });
 
-app.get('/', (req, res) => {
-  res.send('Taxi@ a click backend is running!');
-});
-
-app.get('/api/results', (reg, res) => {
-  res.json({ message: 'Results fetched succesfully!' });
-});
-
-app.get('/api/v1/projects', (req, res) => {
-  res.json({ projects:[] }); // replace with actual data logic
-});
-
 app.patch('/api/request/:id', async (req, res) => {
   const ride = await RideRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(ride);
 });
 
-const io = require('socket.io')(server,
-  {cors: {
+// Simple test routes
+app.get('/', (req, res) => {
+  res.send('Taxi@ a click backend is running!');
+});
+
+app.get('/api/results', (req, res) => {
+  res.json({ message: 'Results fetched successfully!' });
+});
+
+app.get('/api/v1/projects', (req, res) => {
+  res.json({ projects: [] });
+});
+
+// Socket.IO Setup
+const io = new Server(server, {
+  cors: {
     origin: "https://taxi-click-43fa9.web.app",
-    methods: ["GET", "POST"]}
-}
-);
+    methods: ["GET", "POST"]
+  }
+});
+
 io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+
   socket.on('driver-location', (data) => {
+    console.log('Driver location received:', data);
     io.emit('driver-location-update', data);
+  });
+
+  socket.on('pickup-request', ({ passengerLocation, destination }) => {
+    console.log('Pickup Request:', passengerLocation, destination);
+    io.emit('pickup-requested', { passengerLocation, destination });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
   });
 });
 
-// Passenger requests pickup
-socket.on('pickup-request',
-  ({ passengerLocation, destination }) => {
-    console.log('Pickup Request:', passengerLocation, destination);
-    
-    // Notify driver(s)
-    io.emit('pickup-requested',
-      { passengerLocation, destination }); 
-  });
-// Driver sends live location
-  socket.on('driver-location', (driverLocation) => {
-    // Broadcast to all passengers
-    io.emit('driver-location-update', driverLocation);
-  });
+// Start server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
