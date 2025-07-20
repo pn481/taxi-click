@@ -19,14 +19,10 @@ export const useSocket = () => {
   }, []);
   return socketRef.current;
 };
-io.on('connection', (socket) => {
-  console.log('Connected:', socket.id);
-
-  socket.on('driver-location', (data) => {
+socket.on('driver-location', (data) => {
     // Broadcast to all passengers
     io.emit('driver-location-update', data);
   });
-});
 const socket =
 io('https://taxi-click.onrender.com/',
    {
@@ -35,8 +31,9 @@ io('https://taxi-click.onrender.com/',
     reconnection: true,
     rejectUnauthorized: false
    });
-
-
+socket.on('connect', () => {
+  console.log('Connected to server via Socket.IO:', socket.id);
+});
 fetch(`$
   {process.env.React_APP_BACKEND_URL}/api/results`)
 const root = ReactDOM.createRoot(document.getElementById('root'));
