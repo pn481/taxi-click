@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import MapView from './components/MapView';
 import 'leaflet/dist/leaflet.css';
 
-const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000');
+const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://taxi-click.onrender.com');
 
 export default function App() {
   const [location, setLocation] = useState('');
