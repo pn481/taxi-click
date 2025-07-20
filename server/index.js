@@ -65,8 +65,11 @@ const io = require('socket.io')(server,
 }
 );
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  socket.on('driver-location', (data) => {
+    io.emit('driver-location-update', data);
+  });
 });
+
 // Passenger requests pickup
 socket.on('pickup-request',
   ({ passengerLocation, destination }) => {

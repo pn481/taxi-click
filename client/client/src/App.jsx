@@ -66,26 +66,23 @@ export default function App() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="bg-gradient-to-r from-purple-600 to-blue-600 p-4 text-white text-center text-2xl font-bold">
-        TaxiGo Load+
-      </h1>
+      <div className="min-h-screen bg-gray-50 p-6">
+  <h1 className="text-3xl font-bold text-center text-indigo-600 mb-6">
+    Taxi@ a Click
+  </h1>
+
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
-          <h2 className="font-semibold mb-2">Passenger Request</h2>
           <input
-            className="border p-2 w-full mb-2"
-            placeholder="Destination"
-            value={destination}
-            onChange={e => setDestination(e.target.value)}
+         className="border border-gray-300 rounded-lg p-2 mb-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+         placeholder="Enter destination"
+         value={destination}
+         onChange={e => setDestination(e.target.value)}
           />
 
-          <button
-            onClick={requestPickup}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-md transition"
-          >
-            {requestStatus}
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
+           Request Pickup
           </button>
 
           <MapView
@@ -103,7 +100,7 @@ export default function App() {
         <div>
           <h2 className="font-semibold mb-2">Driver View</h2>
           {requests.map(req => (
-            <div key={req._id} className="border-b py-2">
+            <div key={req._id} className="border rounded-lg shadow p-4 bg-white mb-3">
               <p><strong>From:</strong> {req.location}</p>
               <p><strong>To:</strong> {req.destination}</p>
               <button
