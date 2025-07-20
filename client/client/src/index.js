@@ -19,10 +19,7 @@ export const useSocket = () => {
   }, []);
   return socketRef.current;
 };
-socket.on('driver-location', (data) => {
-    // Broadcast to all passengers
-    io.emit('driver-location-update', data);
-  });
+
 const socket =
 io('https://taxi-click.onrender.com/',
    {

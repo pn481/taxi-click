@@ -58,15 +58,19 @@ app.patch('/api/request/:id', async (req, res) => {
   res.json(ride);
 });
 
-io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
-});
 const io = require('socket.io')(server,
   {cors: {
-    origin: "*",
+    origin: "https://taxi-click-43fa9.web.app",
     methods: ["GET", "POST"]}
 }
 );
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+});
+socket.on('driver-location', (data) => {
+    // Broadcast to all passengers
+    io.emit('driver-location-update', data);
+  });
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
