@@ -83,7 +83,9 @@ export default function App() {
             {requestStatus}
           </button>
 
-          <MapView driverLocation={driverLocation} />
+          <MapView
+            driverLocation={driverLocation}
+            onPassengerLocationChange={setPassengerLocation}/>
         </div>
 
         <div>
