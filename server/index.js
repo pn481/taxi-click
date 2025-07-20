@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(cors({
-  origin: 'https://taxi-click-8pm5y3lik-pn481s-projects.vercel.app'
+  origin: 'https://taxi-click-43fa9.web.app'
 }));
 
 app.use(cors());
