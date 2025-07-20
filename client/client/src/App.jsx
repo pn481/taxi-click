@@ -70,7 +70,7 @@ export default function App() {
   })
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Taxi@ a click</h1>
+      <h1 className="bg-gradient-to-r from-purple-600 to-blue-600 p-4 text-blue text-center text-2xl font-bold">Taxi@ a click</h1>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <h2 className="font-semibold mb-2">Passenger Request</h2>
