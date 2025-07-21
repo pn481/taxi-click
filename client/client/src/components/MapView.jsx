@@ -2,19 +2,20 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import { useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 
+function ClickHandler({ setPassengerLocation, onPassengerLocationChange }) {
+  useMapEvents({
+    click(e) {
+      setPassengerLocation(e.latlng);
+      if (onPassengerLocationChange) {
+        onPassengerLocationChange(e.latlng);
+      }
+    }
+  });
+  return null;
+}
+
 function MapView({ driverLocation, onPassengerLocationChange }) {
   const [passengerLocation, setPassengerLocation] = useState(null);
-
-  const handleMapClick = () => {
-    return useMapEvents({
-      click(e) {
-        setPassengerLocation(e.latlng);
-        if (onPassengerLocationChange) {
-          onPassengerLocationChange(e.latlng);
-        }
-      }
-    });
-  };
 
   const centerPosition = driverLocation
     ? [driverLocation.lat, driverLocation.lng]
@@ -43,7 +44,11 @@ function MapView({ driverLocation, onPassengerLocationChange }) {
         </Marker>
       )}
 
-      {handleMapClick()}
+      {/* Correct usage: Render the subcomponent that uses useMapEvents */}
+      <ClickHandler
+        setPassengerLocation={setPassengerLocation}
+        onPassengerLocationChange={onPassengerLocationChange}
+      />
     </MapContainer>
   );
 }
