@@ -8,19 +8,34 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
-// CORS setup
+// ==== Allowed Origins for CORS ====
+const allowedOrigins = [
+  'https://taxi-click-43fa9.web.app', // Your Firebase hosting
+  'https://taxi-click-aje2-gt1v1u76v-pn481s-projects.vercel.app', // Your Vercel deployment
+  // Add other domains as needed (e.g., custom domains, localhost for testing)
+];
+
+// ==== Express CORS setup (handles REST API) ====
 app.use(cors({
-  origin: 'https://taxi-click-43fa9.web.app'
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow requests without origin
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true // allow credentials/cookies if needed
 }));
 app.use(express.json());
 
-// MongoDB connection
+// ==== MongoDB connection ====
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// Mongoose Model
+// ==== Mongoose Model ====
 const RideRequest = mongoose.model('RideRequest', new mongoose.Schema({
   passengerName: String,
   location: String,
@@ -28,7 +43,7 @@ const RideRequest = mongoose.model('RideRequest', new mongoose.Schema({
   status: { type: String, default: 'waiting' }
 }));
 
-// REST API Endpoints
+// ==== REST API Endpoints ====
 app.post('/api/request', async (req, res) => {
   const ride = await RideRequest.create(req.body);
   io.emit('new-request', ride);
@@ -58,11 +73,12 @@ app.get('/api/v1/projects', (req, res) => {
   res.json({ projects: [] });
 });
 
-// Socket.IO Setup
+// ==== Socket.IO Setup (handles real-time communication) ====
 const io = new Server(server, {
   cors: {
-    origin: "https://taxi-click-43fa9.web.app",
-    methods: ["GET", "POST"]
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -84,6 +100,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server
+// ==== Start server ====
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
