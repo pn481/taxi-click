@@ -8,9 +8,13 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
-// CORS setup
+// CORS setup - allow localhost and web app for dev and prod
 app.use(cors({
-  origin: 'https://taxi-click-43fa9.web.app'
+  origin: [
+    'https://taxi-click-43fa9.web.app',
+    'http://localhost:3000',
+    'https://taxi-click.vercel.app'
+  ]
 }));
 app.use(express.json());
 
@@ -42,6 +46,7 @@ app.get('/api/requests', async (req, res) => {
 
 app.patch('/api/request/:id', async (req, res) => {
   const ride = await RideRequest.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  io.emit('request-status-update', { id: ride._id, status: ride.status });
   res.json(ride);
 });
 
@@ -50,18 +55,14 @@ app.get('/', (req, res) => {
   res.send('Taxi@ a click backend is running!');
 });
 
-app.get('/api/results', (req, res) => {
-  res.json({ message: 'Results fetched successfully!' });
-});
-
-app.get('/api/v1/projects', (req, res) => {
-  res.json({ projects: [] });
-});
-
 // Socket.IO Setup
 const io = new Server(server, {
   cors: {
-    origin: "https://taxi-click-43fa9.web.app",
+    origin: [
+      "https://taxi-click-43fa9.web.app",
+      "http://localhost:3000",
+      "https://taxi-click.vercel.app"
+    ],
     methods: ["GET", "POST"]
   }
 });
@@ -70,13 +71,15 @@ io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
   socket.on('driver-location', (data) => {
-    console.log('Driver location received:', data);
     io.emit('driver-location-update', data);
   });
 
   socket.on('pickup-request', ({ passengerLocation, destination }) => {
-    console.log('Pickup Request:', passengerLocation, destination);
     io.emit('pickup-requested', { passengerLocation, destination });
+  });
+
+  socket.on('request-status-update', ({ status, id }) => {
+    io.emit('request-status-update', { status, id });
   });
 
   socket.on('disconnect', () => {
