@@ -76,11 +76,17 @@ app.get('/api/v1/projects', (req, res) => {
 // ==== Socket.IO Setup (handles real-time communication) ====
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: allowedOrigins = [
+  'https://taxi-click-43fa9.web.app', // Firebase Hosting
+  'https://taxi-click-aje2-gt1v1u76v-pn481s-projects.vercel.app', // Vercel
+  'https://mytaxiapp.example.com', // Any other domain you deploy to
+  'http://localhost:3000' // (Optional) Local development
+],
     methods: ["GET", "POST"],
     credentials: true
   }
 });
+
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
