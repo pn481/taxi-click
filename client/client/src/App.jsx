@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { io } from 'socket.io-client';
+import socket from './socket'; // Only import, do NOT re-declare!
 import MapView from './components/MapView';
 import 'leaflet/dist/leaflet.css';
-import socket from './socket';
-
-const socket = io(process.env.REACT_APP_BACKEND_URL || 'https://taxi-click.onrender.com');
 
 export default function App() {
   const [location, setLocation] = useState('');
@@ -13,18 +10,17 @@ export default function App() {
   const [requests, setRequests] = useState([]);
   const [driverLocation, setDriverLocation] = useState(null);
   const [requestStatus, setRequestStatus] = useState('Request Pickup');
-  const [passengerLocation, setPassengerLocation] = useState(null); // New
+  const [passengerLocation, setPassengerLocation] = useState(null);
 
   useEffect(() => {
     fetchRequests();
 
     socket.on('driver-location-update', loc => {
-      console.log('Driver is moving:', loc);
       setDriverLocation(loc);
     });
 
     socket.on('pickup-requested', ({ passengerLocation, destination }) => {
-      console.log('New pickup request:', passengerLocation, destination);
+      // handle new pickup request
     });
 
     // Send driver's location periodically
@@ -50,10 +46,9 @@ export default function App() {
   };
   
   const acceptRequest = async (id) => {
-  await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/request/${id}`, { status: 'accepted' });
-  fetchRequests();
+    await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/request/${id}`, { status: 'accepted' });
+    fetchRequests();
   };
-
 
   const requestPickup = () => {
     if (!passengerLocation || !destination) {
@@ -66,35 +61,33 @@ export default function App() {
   };
 
   return (
-      <div className="flex h-screen">
-        <aside className="w-1/4 bg-gray-800 text-white p-4"></aside>
+    <div className="flex h-screen">
+      <aside className="w-1/4 bg-gray-800 text-white p-4"></aside>
       <h1 className="text-lg mb-2">Taxi@ a Click</h1>
-
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <input
-         className="border border-gray-300 rounded-lg p-2 mb-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-         placeholder="Enter destination"
-         value={destination}
-         onChange={e => setDestination(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 mb-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter destination"
+            value={destination}
+            onChange={e => setDestination(e.target.value)}
           />
-
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition">
-           Request Pickup
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition"
+            onClick={requestPickup}
+          >
+            Request Pickup
           </button>
-
           <MapView
             driverLocation={driverLocation}
             onPassengerLocationChange={setPassengerLocation}
           />
-
           {passengerLocation && (
             <p className="mt-2 text-gray-700">
               Passenger Location: Lat {passengerLocation.lat.toFixed(5)}, Lng {passengerLocation.lng.toFixed(5)}
             </p>
           )}
         </div>
-
         <div>
           <h2 className="font-semibold mb-2">Driver View</h2>
           {requests.map(req => (
