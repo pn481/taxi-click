@@ -66,10 +66,9 @@ export default function App() {
   };
 
   return (
-      <div className="min-h-screen flex items-center bg-gray-100 ">
-      <div className="p-6 bg-white rounded shadow-md w-96">
-      <h1 className="text-xl font-bold text-center text-indigo-600 mb-6">Taxi@ a Click</h1>
-     </div>
+      <div className="flex h-screen">
+        <aside className="w-1/4 bg-gray-800 text-white p-4"></aside>
+      <h1 className="text-lg mb-2">Taxi@ a Click</h1>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
