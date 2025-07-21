@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @import 'leaflet/dist/leaflet.css';
+
+/* Animated hover for headings */
+h1, h2 {
+  transition: color 0.3s, text-shadow 0.3s;
+}
+h1:hover, h2:hover {
+  color: #fbbf24 !important;
+  text-shadow: 0 2px 8px #f59e42, 0 0px 20px #fff3;
+}
